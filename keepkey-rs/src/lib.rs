@@ -64,10 +64,11 @@ pub extern "C" fn rust_main() -> ! {
   KeepKeyBoard::set_led(LedAction::ClrGreenLed);
 
   let usb = KeepKeyBoard::usb();
-  let mut winusb = kklib::usb::WinUsb::new(&usb, 1);
+  let mut winusb = kklib::usb::WinUsb::new(&usb, 0);
   let mut wusb = WebUsb::new(&usb, url_scheme::HTTPS, "beta.shapeshift.com");
   let mut kk_interface = kklib::usb::KeepKeyInterface::new(&usb, "KeepKey Interface");
   let mut kk_debug_link = kklib::usb::KeepKeyInterface::new(&usb, "KeepKey Debug Link Interface");
+  let mut kk_u2f = kklib::usb::U2FInterface::new(&usb, "KeepKey U2F Interface");
 
   let mut serial_number_buf: [u8; 24] = [0; 24];
   hex::encode_to_slice(KeepKeyBoard::serial_number(), &mut serial_number_buf).unwrap();
@@ -78,12 +79,15 @@ pub extern "C" fn rust_main() -> ! {
     .product("KeepKey")
     .manufacturer("KeyHodlers, LLC")
     .serial_number(serial_number)
+    .device_release(0x0100)
     .max_packet_size_0(64)
     .build();
 
   loop {
-    if usb_dev.poll(&mut [&mut winusb, &mut wusb, &mut kk_interface, &mut kk_debug_link]) {
+    if usb_dev.poll(&mut [&mut winusb, &mut wusb, &mut kk_interface, &mut kk_debug_link, &mut kk_u2f]) {
       kk_interface.poll();
+      kk_debug_link.poll();
+      kk_u2f.poll();
     }
 
     let mut text: heapless::String<512> = heapless::String::new();

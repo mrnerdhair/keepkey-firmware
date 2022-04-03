@@ -17,7 +17,7 @@ pub struct WinUsb {
 
 impl WinUsb {
   pub fn new<B: UsbBus>(_alloc: &UsbBusAllocator<B>, interface_num: u8) -> WinUsb {
-    assert_ne!(interface_num, 0);
+    // assert_ne!(interface_num, 0);
     WinUsb {
       interface_num,
     }
@@ -27,7 +27,7 @@ impl WinUsb {
 impl<B: UsbBus> UsbClass<B> for WinUsb {
   fn get_string(&self, index: StringIndex, _lang_id: u16) -> Option<&str> {
     if u8::from(index) == MS_OS_STRING_DESCRIPTOR_INDEX {
-      return Some("MSFT100!")
+      return Some("MSFT100*")
     }
 
     None
@@ -38,13 +38,13 @@ impl<B: UsbBus> UsbClass<B> for WinUsb {
    if req.direction == usb_device::UsbDirection::In &&
       req.request_type == usb_device::control::RequestType::Vendor &&
       req.recipient == usb_device::control::Recipient::Device {
-      if req.request == '!' as u8 {
+      if req.request == '*' as u8 {
         // Request is for an MS OS Feature Descriptor
         let interface_num: u8 = (req.value >> 8) as u8;
         let page_num: u8 = (req.value & 0xFF) as u8;
         assert_eq!(interface_num, 0);
         assert_eq!(page_num, 0);
-        if page_num != 0 {
+        // if page_num != 0 {
           match req.index {
             MS_OS_FEATURE_DESCRIPTOR_EXTENDED_COMPAT_ID => {
               //TODO: support multiple interface numbers
@@ -55,7 +55,6 @@ impl<B: UsbBus> UsbClass<B> for WinUsb {
               ];
               resp[16] = self.interface_num;
               xfer.accept_with(resp).unwrap();
-              panic!();
             },
             MS_OS_FEATURE_DESCRIPTOR_EXTENDED_PROPERTIES => {
               let resp: &[u8] = &[
@@ -65,12 +64,12 @@ impl<B: UsbBus> UsbClass<B> for WinUsb {
                 0x4E, 0x00, 0x00, 0x00,
                 0x7B, 0x00, 0x30, 0x00, 0x32, 0x00, 0x36, 0x00, 0x33, 0x00, 0x62, 0x00, 0x35, 0x00, 0x31, 0x00, 0x32, 0x00, 0x2D, 0x00, 0x38, 0x00, 0x38, 0x00, 0x63, 0x00, 0x62, 0x00, 0x2D, 0x00, 0x34, 0x00, 0x31, 0x00, 0x33, 0x00, 0x36, 0x00, 0x2D, 0x00, 0x39, 0x00, 0x36, 0x00, 0x31, 0x00, 0x33, 0x00, 0x2D, 0x00, 0x35, 0x00, 0x63, 0x00, 0x38, 0x00, 0x65, 0x00, 0x31, 0x00, 0x30, 0x00, 0x39, 0x00, 0x64, 0x00, 0x38, 0x00, 0x65, 0x00, 0x66, 0x00, 0x35, 0x00, 0x7D, 0x00, 0x00, 0x00,
               ];
+              panic!("foo");
               xfer.accept_with(resp).unwrap();
-              panic!();
             },
             _ => xfer.reject().unwrap(),
           }
-        }
+        // }
       }
     }
   }

@@ -28,10 +28,6 @@ extern "C" {
 
   pub fn led_func(act: LedAction);
 
-  pub fn usb_tx(buf: *const u8, len: u32) -> bool;
-  pub fn usb_debug_tx(buf: *const u8, len: u32) -> bool;
-  pub fn usbReconnect();
-
   pub fn desig_get_unique_id2(out: *mut u32);
 
   pub fn svc_disable_interrupts();

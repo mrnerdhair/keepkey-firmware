@@ -1,3 +1,6 @@
 [submodule "deps/libopencm3"]
 	path = deps/libopencm3
 	url = https://github.com/keepkey/libopencm3
+[submodule "deps/usb-device"]
+	path = deps/usb-device
+	url = https://github.com/mvirkkunen/usb-device
