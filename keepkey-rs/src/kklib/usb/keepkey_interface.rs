@@ -37,6 +37,7 @@ impl<B: UsbBus> KeepKeyInterface<'_, B> {
           panic!("unexpectedly read data from interrupt out endpoint");
         }
 
+        // Echo back data for testing
         self.ep_interrupt_in.write(&self.interrupt_buf[0..count])
           .expect("interrupt write");
 

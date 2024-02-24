@@ -88,7 +88,7 @@ pub extern "C" fn rust_main() -> ! {
 
     let mut text: heapless::String<512> = heapless::String::new();
     uwrite!(&mut text, "Hello, world! ({})", KeepKeyBoard::clock_ms()).unwrap();
-    
+
     let mut canvas = KeepKeyBoard::display_canvas();
     canvas.clear(GrayColor::BLACK).unwrap();
 

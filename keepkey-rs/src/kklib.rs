@@ -25,7 +25,7 @@ pub enum ShutdownMessage<'a> {
   // Panic(Option<&'a str>),
 }
 
-#[cfg(debug_assertions)]
+#[cfg(all(debug_assertions, target_arch = "arm"))]
 #[panic_handler]
 fn handle_panic(info: &PanicInfo) -> ! {
   KeepKeyBoard::do_without_interrupts(|| {
@@ -35,7 +35,7 @@ fn handle_panic(info: &PanicInfo) -> ! {
   unreachable!();
 }
 
-#[cfg(not(debug_assertions))]
+#[cfg(all(not(debug_assertions), target_arch = "arm"))]
 #[panic_handler]
 fn handle_panic(_info: &PanicInfo) -> ! {
   KeepKeyBoard::do_without_interrupts(|| {
