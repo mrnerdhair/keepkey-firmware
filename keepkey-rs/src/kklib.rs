@@ -10,8 +10,11 @@ pub mod usb;
 use core::panic::PanicInfo;
 
 pub use board::*;
+#[allow(unused_imports)]
 pub use canvas_mutex_guard::*;
+#[allow(unused_imports)]
 pub use firmware::*;
+#[allow(unused_imports)]
 pub use rand::*;
 pub use types::*;
 

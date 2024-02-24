@@ -1,6 +1,5 @@
 use usb_device::class_prelude::*;
 use usb_device::Result;
-use usb_device::descriptor;
 
 pub struct KeepKeyInterface<'a, B: UsbBus> {
   pub interface_name: &'a str,
@@ -63,8 +62,8 @@ impl<B: UsbBus> UsbClass<B> for KeepKeyInterface<'_, B> {
     Ok(())
   }
 
-  fn get_string(&self, index: StringIndex, lang_id: u16) -> Option<&str> {
-    if lang_id == descriptor::lang_id::ENGLISH_US {
+  fn get_string(&self, index: StringIndex, lang_id: LangID) -> Option<&str> {
+    if lang_id == LangID::EN_US {
       if index == self.interface_str {
         return Some(self.interface_name);
       }

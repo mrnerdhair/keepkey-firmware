@@ -74,11 +74,14 @@ pub extern "C" fn rust_main() -> ! {
   let serial_number = core::str::from_utf8_mut(&mut serial_number_buf).unwrap();
   serial_number.make_ascii_uppercase();
 
-  let mut usb_dev = UsbDeviceBuilder::new(&usb, UsbVidPid(0x2B24, 0x0002))
+  let string_descriptors = StringDescriptors::new(LangID::EN_US)
     .product("KeepKey")
     .manufacturer("KeyHodlers, LLC")
-    .serial_number(serial_number)
-    .max_packet_size_0(64)
+    .serial_number(serial_number);
+
+  let mut usb_dev = UsbDeviceBuilder::new(&usb, UsbVidPid(0x2B24, 0x0002))
+    .strings(&[string_descriptors]).expect("too many string descriptors")
+    .max_packet_size_0(64).expect("bad max packet size")
     .build();
 
   loop {

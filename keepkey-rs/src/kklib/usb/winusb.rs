@@ -25,7 +25,7 @@ impl WinUsb {
 }
 
 impl<B: UsbBus> UsbClass<B> for WinUsb {
-  fn get_string(&self, index: StringIndex, _lang_id: u16) -> Option<&str> {
+  fn get_string(&self, index: StringIndex, _lang_id: LangID) -> Option<&str> {
     if u8::from(index) == MS_OS_STRING_DESCRIPTOR_INDEX {
       return Some("MSFT100!")
     }
