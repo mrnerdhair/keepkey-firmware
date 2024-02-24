@@ -33,7 +33,7 @@ RUN ln -s /usr/bin/python3 /usr/bin/python
 
 # Build libopencm3
 WORKDIR /root
-RUN git clone -b docker-v9 https://github.com/keepkey/libopencm3.git libopencm3
+RUN git clone --depth 1 -b docker-v9 https://github.com/keepkey/libopencm3.git libopencm3 && git checkout bcfdcc09ac54e728778b98d0249d4af736f9344b
 WORKDIR /root/libopencm3
 RUN apk add --update --no-cache patch
 COPY libopencm.Makefile.patch ./
