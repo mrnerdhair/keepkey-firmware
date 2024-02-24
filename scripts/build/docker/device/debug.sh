@@ -1,16 +1,11 @@
 #!/bin/bash -e
 
 KEEPKEY_FIRMWARE="$(dirname "$(dirname "$(dirname "$(dirname "$( cd "$(dirname "$0")" ; pwd -P )")")")")"
-cd $KEEPKEY_FIRMWARE
+cd "$KEEPKEY_FIRMWARE"
 
-docker build . -f Dockerfile.rust --build-arg CARGO_TARGET=thumbv7m-none-eabi
-RUST_IMAGE_HASH="$(docker build . -f Dockerfile.rust --build-arg CARGO_TARGET=thumbv7m-none-eabi -q)"
-docker run -t \
-  -v $(pwd):/root/keepkey-firmware:z \
-  "$RUST_IMAGE_HASH" /bin/sh -c "\
-      cd /root/keepkey-firmware/keepkey-rs && \
-      cargo build --target thumbv7m-none-eabi && \
-      chown -R \`stat -c \"%u:%g\" /root/keepkey-firmware\` /root/keepkey-firmware/keepkey-rs"
+pushd keepkey-rs
+cargo build --target thumbv7m-none-eabi
+popd
 
 IMAGETAG=kktech/firmware:v15
 docker image inspect $IMAGETAG > /dev/null || docker pull $IMAGETAG
