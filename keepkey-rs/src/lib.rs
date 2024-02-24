@@ -65,7 +65,7 @@ pub extern "C" fn rust_main() -> ! {
 
   let usb = KeepKeyBoard::usb();
   let mut winusb = kklib::usb::WinUsb::new(&usb, 1);
-  let mut wusb = WebUsb::new(&usb, url_scheme::HTTPS, "beta.shapeshift.com");
+  let mut wusb = WebUsb::new(&usb, url_scheme::HTTPS, "app.shapeshift.com");
   let mut kk_interface = kklib::usb::KeepKeyInterface::new(&usb, "KeepKey Interface");
   let mut kk_debug_link = kklib::usb::KeepKeyInterface::new(&usb, "KeepKey Debug Link Interface");
 
