@@ -1,15 +1,15 @@
 [submodule "deps/libopencm3"]
 	path = deps/libopencm3
-	url = https://github.com/keepkey/libopencm3
+	url = https://github.com/mrnerdhair/libopencm3
 [submodule "deps/usb-device"]
 	path = deps/usb-device
-	url = https://github.com/mvirkkunen/usb-device
+	url = https://github.com/mrnerdhair/usb-device
 [submodule "deps/embedded-graphics"]
 	path = deps/embedded-graphics
-	url = https://github.com/embedded-graphics/embedded-graphics
+	url = https://github.com/mrnerdhair/embedded-graphics
 [submodule "deps/genawaiter"]
 	path = deps/genawaiter
-	url = https://github.com/whatisaphone/genawaiter
+	url = https://github.com/mrnerdhair/genawaiter
 [submodule "deps/state_machine_future"]
 	path = deps/state_machine_future
-	url = https://github.com/fitzgen/state_machine_future
+	url = https://github.com/mrnerdhair/state_machine_future
