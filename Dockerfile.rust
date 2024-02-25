@@ -4,5 +4,6 @@ RUN rustup target install ${CARGO_TARGET}
 WORKDIR /root/keepkey-firmware/keepkey-rs
 RUN cargo init --lib
 COPY keepkey-rs/Cargo.toml keepkey-rs/Cargo.lock ./
+COPY deps/embedded-graphics ../deps/embedded-graphics
 COPY deps/usb-device ../deps/usb-device
 RUN mkdir -p /root/.cargo /root/cargo-vendor && cargo vendor --locked /root/cargo-vendor > /root/.cargo/config

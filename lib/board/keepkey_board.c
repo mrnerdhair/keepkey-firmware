@@ -101,5 +101,6 @@ void kk_board_init(void) {
   gpio_set_af(GPIOA, GPIO_AF10, (GPIO11 | GPIO12));
 
   // keepkey_button_init();
+  display_hw_init();
   svc_enable_interrupts();  // This enables the timer and button interrupts
 }

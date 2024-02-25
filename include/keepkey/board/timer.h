@@ -29,6 +29,10 @@ void timer_init(void);
 void delay_ms(uint32_t ms);
 void delay_us(uint32_t us);
 
+uint64_t get_clock_ms(void);
+void set_clock_compare_ms(uint64_t ms);
+extern void rust_clock_compare_callback(uint64_t ms);
+
 /// Defense against Fault Injection: random delay of a few miliseconds
 /// \returns the argument passed
 uint32_t fi_defense_delay(volatile uint32_t value);

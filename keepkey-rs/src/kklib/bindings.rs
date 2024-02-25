@@ -10,6 +10,7 @@ extern "C" {
   pub fn delay_us(us: u32);
   pub fn delay_ms(ms: u32);
   pub fn get_clock_ms() -> u64;
+  pub fn set_clock_compare_ms(ms: u64);
 
   pub fn is_mfg_mode() -> bool;
   pub fn set_mfg_mode_off() -> bool;

@@ -4,3 +4,12 @@
 [submodule "deps/usb-device"]
 	path = deps/usb-device
 	url = https://github.com/mvirkkunen/usb-device
+[submodule "deps/embedded-graphics"]
+	path = deps/embedded-graphics
+	url = https://github.com/embedded-graphics/embedded-graphics
+[submodule "deps/genawaiter"]
+	path = deps/genawaiter
+	url = https://github.com/whatisaphone/genawaiter
+[submodule "deps/state_machine_future"]
+	path = deps/state_machine_future
+	url = https://github.com/fitzgen/state_machine_future

@@ -2,7 +2,10 @@ use usb_device::class_prelude::*;
 use usb_device::Result;
 use usb_device::descriptor;
 
-pub struct KeepKeyInterface<'a, B: UsbBus> {
+pub trait Callback: FnMut(&[u8], &mut dyn FnMut(&[u8]) -> ()) -> () {}
+impl<C: FnMut(&[u8], &mut dyn FnMut(&[u8]) -> ()) -> ()> Callback for C {}
+
+pub struct KeepKeyInterface<'a, B: UsbBus, C: Callback> {
   pub interface_name: &'a str,
   pub interface_num: InterfaceNumber,
   interface_str: StringIndex,
@@ -11,10 +14,11 @@ pub struct KeepKeyInterface<'a, B: UsbBus> {
   interrupt_buf: [u8; 64],
   expect_interrupt_in_complete: bool,
   expect_interrupt_out: bool,
+  callback: &'a mut C
 }
 
-impl<B: UsbBus> KeepKeyInterface<'_, B> {
-  pub fn new<'a>(alloc: &'a UsbBusAllocator<B>, interface_name: &'a str) -> KeepKeyInterface<'a, B> {
+impl<B: UsbBus, C: Callback> KeepKeyInterface<'_, B, C> {
+  pub fn new<'a>(alloc: &'a UsbBusAllocator<B>, interface_name: &'a str, callback: &'a mut C) -> KeepKeyInterface<'a, B, C> {
     KeepKeyInterface {
       interface_name: interface_name,
       interface_str: alloc.string(),
@@ -24,6 +28,7 @@ impl<B: UsbBus> KeepKeyInterface<'_, B> {
       interrupt_buf: [0; 64],
       expect_interrupt_in_complete: false,
       expect_interrupt_out: false,
+      callback,
     }
   }
 
@@ -36,15 +41,10 @@ impl<B: UsbBus> KeepKeyInterface<'_, B> {
         } else {
           panic!("unexpectedly read data from interrupt out endpoint");
         }
-        // match (self.callback)(&self.interrupt_buf[0..count]) {
-        //   Some(outBuf) => {
-        //     self.ep_interrupt_in.write(outBuf).expect("interrupt write");
-        //     self.expect_interrupt_in_complete = true;
-        //   }
-        //   None => ()
-        // }
-        self.ep_interrupt_in.write(&self.interrupt_buf[0..count]).expect("interrupt write");
-        self.expect_interrupt_in_complete = true;
+        (self.callback)(&self.interrupt_buf[0..count], &mut |x| {
+          self.ep_interrupt_in.write(x).expect("interrupt write");
+          self.expect_interrupt_in_complete = true;
+        })
       },
       Err(UsbError::WouldBlock) => { },
       Err(err) => panic!("interrupt read {:?}", err),
@@ -52,7 +52,7 @@ impl<B: UsbBus> KeepKeyInterface<'_, B> {
   }
 }
 
-impl<B: UsbBus> UsbClass<B> for KeepKeyInterface<'_, B> {
+impl<B: UsbBus, C: Callback> UsbClass<B> for KeepKeyInterface<'_, B, C> {
   fn reset(&mut self) {
     self.expect_interrupt_in_complete = false;
     self.expect_interrupt_out = false;

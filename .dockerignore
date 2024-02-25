@@ -1,3 +1,9 @@
 .vscode
 bin
+deps/embedded-graphics/core/target
+deps/embedded-graphics/target
+deps/embedded-graphics/tools/target
+deps/usb-device/target
+egtest
+rle_decode
 keepkey-rs/target

@@ -118,47 +118,47 @@ impl<B: UsbBus> UsbClass<B> for U2FInterface<'_, B> {
     }
 
     match (req.request_type, req.request) {
-        (control::RequestType::Standard, control::Request::GET_DESCRIPTOR) => {
-          match (req.value >> 8) as u8 {
-            0x22 => {
-              xfer.accept_with_static(&[
-                0x06, 0xd0, 0xf1, 0x09, 0x01, 0xa1, 0x01, 0x09, 0x20,
-                0x15, 0x00, 0x26, 0xff, 0x00, 0x75, 0x08, 0x95, 0x40,
-                0x81, 0x02, 0x09, 0x21, 0x15, 0x00, 0x26, 0xff, 0x00,
-                0x75, 0x08, 0x95, 0x40, 0x91, 0x02, 0xc0
-              ]).ok();
-            }
-            0x21 => {
-              let buf = &[
-                // Length of buf inclusive of size prefix
-                9,
-                // Descriptor type
-                0x21,
-                // HID Class spec version 1.11
-                0x11,
-                0x01,
-                // Country code not supported
-                0x00,
-                // Number of following descriptors
-                1,
-                // We have a HID report descriptor the host should read
-                0x22,
-                // HID report descriptor size,
-                0x22,
-                0x00,
-              ];
-              xfer.accept_with(buf).ok();
-            }
-            _ => {}
+      (control::RequestType::Standard, control::Request::GET_DESCRIPTOR) => {
+        match (req.value >> 8) as u8 {
+          0x22 => {
+            xfer.accept_with_static(&[
+              0x06, 0xd0, 0xf1, 0x09, 0x01, 0xa1, 0x01, 0x09, 0x20,
+              0x15, 0x00, 0x26, 0xff, 0x00, 0x75, 0x08, 0x95, 0x40,
+              0x81, 0x02, 0x09, 0x21, 0x15, 0x00, 0x26, 0xff, 0x00,
+              0x75, 0x08, 0x95, 0x40, 0x91, 0x02, 0xc0
+            ]).ok();
           }
+          0x21 => {
+            let buf = &[
+              // Length of buf inclusive of size prefix
+              9,
+              // Descriptor type
+              0x21,
+              // HID Class spec version 1.11
+              0x11,
+              0x01,
+              // Country code not supported
+              0x00,
+              // Number of following descriptors
+              1,
+              // We have a HID report descriptor the host should read
+              0x22,
+              // HID report descriptor size,
+              0x22,
+              0x00,
+            ];
+            xfer.accept_with(buf).ok();
+          }
+          _ => {}
         }
-        (control::RequestType::Class, 0x01) => {
-          xfer.reject().ok(); // Not supported for now
-        }
-        (control::RequestType::Class, 0x02) => {
-          xfer.reject().ok(); // Not supported for now
-        }
-        _ => {}
+      }
+      (control::RequestType::Class, 0x01) => {
+        xfer.reject().ok(); // Not supported for now
+      }
+      (control::RequestType::Class, 0x02) => {
+        xfer.reject().ok(); // Not supported for now
+      }
+      _ => {}
     }
   }
 }

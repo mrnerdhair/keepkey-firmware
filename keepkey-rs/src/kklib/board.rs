@@ -25,6 +25,7 @@ impl KeepKeyBoard {
   pub fn delay_us(us: u32) { unsafe { bindings::delay_us(us) } }
   pub fn delay_ms(ms: u32) { unsafe { bindings::delay_ms(ms) } }
   pub fn clock_ms() -> u64 { unsafe { bindings::get_clock_ms() } }
+  pub fn set_clock_compare_ms(ms: u64) { unsafe { bindings::set_clock_compare_ms(ms) } }
 
   pub fn is_mfg_mode() -> bool { unsafe { bindings::is_mfg_mode() } }
   pub fn set_mfg_mode_off() -> Result<(), ()> {

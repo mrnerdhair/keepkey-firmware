@@ -25,15 +25,23 @@
 #include "keepkey/board/keepkey_board.h"
 #include "keepkey/board/timer.h"
 #include "keepkey/board/supervise.h"
+#include "keepkey/firmware/rust.h"
 #include "keepkey/rand/rng.h"
 
 #include <stddef.h>
 
-static volatile uint32_t remaining_delay = UINT32_MAX;
+static volatile uint32_t remaining_delay = 0;
 static volatile uint64_t clock = 0;
+static volatile uint64_t clock_compare = 0;
+static volatile bool clock_compare_armed = false;
 
 uint64_t get_clock_ms(void) {
   return clock;
+}
+
+void set_clock_compare_ms(uint64_t ms) {
+  clock_compare = ms;
+  clock_compare_armed = ms > 0;
 }
 
 /*
@@ -124,6 +132,10 @@ void delay_ms(uint32_t ms) {
 void timerisr_usr(void) {
   /* Increment the clock */
   clock++;
+  if (clock_compare_armed && clock >= clock_compare) {
+    clock_compare_armed = false;
+    rust_clock_compare_callback(clock);
+  }
 
   /* Decrement the delay */
   if (remaining_delay > 0) remaining_delay--;
